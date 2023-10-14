@@ -1,28 +1,67 @@
 import { css, keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const closeAnimation = keyframes`
   from {
-    width:300px;
-    translate:scaleX(1);
+opacity:1;
+transform:scale(1)
+
   }
   to {
-   width:0px;
-   opacity:0;
-   translate:scaleX(0.1);
-
+opacity:0;
+transform:scale(0)
   }
 `;
 
 const openAnimation = keyframes`
   from {
-    width:0px;
+opacity:0;
+transform:scale(0)
+
   }
   to {
-   width:300px;
+opacity:1;
+transform:scale(1)
   }
 `;
+
+const moveHeadUpAnimation = keyframes`
+  from{
+    top:5px
+  }
+  to{
+    top:-10px
+  }
+`;
+
+const moveHeadDownAnimation = keyframes`
+  from{
+    top:-10px
+  }
+  to{
+    top:5px
+  }
+`;
+
+const moveLegDownAnimation = keyframes`
+  from{
+    top:5px
+  }
+  to{
+    top:60px
+  }
+`;
+
+const moveLegUpAnimation = keyframes`
+  from{
+    top:60px
+  }
+  to{
+    top:5px
+  }
+`;
+
 const Container = styled("div")(() => {
   return {
     position: "relative",
@@ -34,36 +73,94 @@ const Div = styled("div")(() => {
     position: "absolute",
     left: 0,
     top: 0,
-    width: 300,
-    height: 200,
-
+    width: 230,
+    height: 130,
     background: "transparent",
-    border: "2px solid blue",
+    color: "white",
+    fontSize: 20,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   };
 });
 
-const Button = styled("div")<{ isHover: boolean }>(({ isHover }) => {
+const Button = styled("div")<{ isHover: boolean | null }>(({ isHover }) => {
   return {
     position: "absolute",
     left: 0,
     top: 0,
-    width: 300,
-    height: 200,
-    backgroundColor: "pink",
-    marginLeft: 50,
-    animation: isHover
-      ? `${closeAnimation} 1s forwards`
-      : `${openAnimation} 1s forwards`,
+    width: 230,
+    height: 130,
+    opacity: 1,
+    borderRadius: 16,
+    backgroundColor: "rgb(0, 191, 165)",
+    animation:
+      isHover == null
+        ? undefined
+        : isHover
+        ? `${closeAnimation} 1s forwards`
+        : `${openAnimation} 1s forwards`,
   };
 });
 
-const GooeyTeeth = () => {
-  const [isHover, setIsHover] = useState(false);
-  return (
-    <div style={{ filter: `url(#goo)` }}>
-      <Container>
-        <Button isHover={isHover}>Test</Button>
+const Head = styled("div")<{ isHover: boolean | null; left: boolean }>(
+  ({ isHover, left }) => {
+    return {
+      backgroundColor: "rgb(0, 191, 165)",
+      position: "absolute",
+      left: left ? 10 : 100,
+      width: 120,
+      height: 120,
+      top: 5,
+      borderRadius: 100,
+      animation:
+        isHover === null
+          ? undefined
+          : isHover
+          ? `${moveHeadUpAnimation} 0.7s forwards`
+          : `${moveHeadDownAnimation} 0.7s forwards`,
+    };
+  }
+);
 
+const Leg = styled("div")<{ isHover: boolean | null; left: boolean }>(
+  ({ isHover, left }) => {
+    return {
+      position: "absolute",
+      top: 5,
+      left: left ? 40 : 135,
+      backgroundColor: "rgb(0, 191, 165)",
+      width: 60,
+      height: 110,
+      borderRadius: "50% / 50%",
+      rotate: left ? "-15deg" : "15deg",
+      animation:
+        isHover === null
+          ? undefined
+          : isHover
+          ? `${moveLegDownAnimation} 0.7s forwards`
+          : `${moveLegUpAnimation} 0.7s forwards`,
+    };
+  }
+);
+
+const GooeyTeeth = () => {
+  const [isHover, setIsHover] = useState<boolean | null>(null);
+  useEffect(() => {
+    console.log(isHover);
+  }, [isHover]);
+  return (
+    <div>
+      <Container style={{ filter: `url(#goo)` }}>
+        <div>
+          <Head isHover={isHover} left={true} />
+          <Head isHover={isHover} left={false} />
+
+          <Leg isHover={isHover} left={true} />
+          <Leg isHover={isHover} left={false} />
+        </div>
+
+        <Button isHover={isHover} />
         <Div
           onMouseEnter={() => {
             setIsHover(true);
@@ -71,58 +168,12 @@ const GooeyTeeth = () => {
           onMouseLeave={() => {
             setIsHover(false);
           }}
-        ></Div>
+        >
+          <span>Login</span>
+        </Div>
       </Container>
-      {/* <div style={{ display: "flex" }}>
-        <div>
-          <div
-            style={{
-              backgroundColor: "red",
-              width: 120,
-              height: 120,
-              borderRadius: 100,
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              top: 80,
-              left: 30,
-              backgroundColor: "blue",
-              width: 60,
-              height: 120,
-              borderRadius: "50% / 50%",
-              rotate: "-15deg",
-            }}
-          />
-        </div>
-        <div>
-          <div
-            style={{
-              position: "absolute",
-              left: 90,
-              backgroundColor: "orange",
-              width: 120,
-              height: 120,
-              borderRadius: 100,
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              top: 80,
-              left: 130,
-              backgroundColor: "green",
-              width: 60,
-              height: 120,
-              borderRadius: "50% / 50%",
-              rotate: "15deg",
-            }}
-          />
-        </div>
-      </div> */}
 
-      {/* <svg>
+      <svg>
         <defs>
           <filter id="goo">
             <feGaussianBlur
@@ -139,7 +190,7 @@ const GooeyTeeth = () => {
             <feBlend in="SourceGraphic" in2="goo" />
           </filter>
         </defs>
-      </svg> */}
+      </svg>
     </div>
   );
 };
