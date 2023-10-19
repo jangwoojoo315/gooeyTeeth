@@ -1,6 +1,6 @@
-import { css, keyframes } from "@emotion/react";
+import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 const closeAnimation = keyframes`
   from {
@@ -46,7 +46,7 @@ const moveHeadDownAnimation = keyframes`
 
 const moveLegDownAnimation = keyframes`
   from{
-    top:5px
+    top:-4px
   }
   to{
     top:60px
@@ -68,109 +68,93 @@ const Container = styled("div")(() => {
   };
 });
 
+// const Div = styled("div")(() => {
+//   return {
+//     position: "absolute",
+//     left: 0,
+//     top: 0,
+//     width: 230,
+//     height: 130,
+//     background: "transparent",
+//     color: "white",
+//     fontSize: 20,
+//     display: "flex",
+//     justifyContent: "center",
+//     alignItems: "center",
+//   };
+// });
+
+const Text = styled("span")(() => {
+  return {
+    position: "absolute",
+    top: 50,
+    left: 88,
+    color: "white",
+  };
+});
+
 const Div = styled("div")(() => {
   return {
     position: "absolute",
     left: 0,
-    top: 0,
-    width: 230,
-    height: 130,
-    background: "transparent",
-    color: "white",
-    fontSize: 20,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+    top: -50,
+    width: 220,
+    height: 220,
+    opacity: 1,
+    borderRadius: "50%",
+    backgroundColor: "rgb(0, 191, 165)",
+    animation: `${closeAnimation} 2s forwards`,
+    animationDirection: "alternate",
+    animationIterationCount: "infinite",
   };
 });
 
-const Button = styled("div")<{ isHover: boolean | null }>(({ isHover }) => {
+const Head = styled("div")<{ left: boolean }>(({ left }) => {
+  return {
+    backgroundColor: "rgb(0, 191, 165)",
+    position: "absolute",
+    left: left ? 13 : 103,
+    width: 110,
+    height: 110,
+    top: 0,
+    borderRadius: 100,
+
+    animation: `${moveHeadDownAnimation} 2s forwards`,
+    animationDirection: "alternate",
+    animationIterationCount: "infinite",
+  };
+});
+
+const Leg = styled("div")<{ left: boolean }>(({ left }) => {
   return {
     position: "absolute",
-    left: 0,
-    top: 0,
-    width: 230,
-    height: 130,
-    opacity: 1,
-    borderRadius: 16,
+    top: 5,
+    left: left ? 38 : 130,
     backgroundColor: "rgb(0, 191, 165)",
-    animation:
-      isHover == null
-        ? undefined
-        : isHover
-        ? `${closeAnimation} 1s forwards`
-        : `${openAnimation} 1s forwards`,
+    width: 60,
+    height: 115,
+    borderRadius: "50% / 50%",
+    rotate: left ? "-15deg" : "15deg",
+    animation: `${moveLegDownAnimation} 2s forwards`,
+    animationDirection: "alternate",
+    animationIterationCount: "infinite",
   };
 });
 
-const Head = styled("div")<{ isHover: boolean | null; left: boolean }>(
-  ({ isHover, left }) => {
-    return {
-      backgroundColor: "rgb(0, 191, 165)",
-      position: "absolute",
-      left: left ? 10 : 100,
-      width: 120,
-      height: 120,
-      top: 5,
-      borderRadius: 100,
-      animation:
-        isHover === null
-          ? undefined
-          : isHover
-          ? `${moveHeadUpAnimation} 0.7s forwards`
-          : `${moveHeadDownAnimation} 0.7s forwards`,
-    };
-  }
-);
-
-const Leg = styled("div")<{ isHover: boolean | null; left: boolean }>(
-  ({ isHover, left }) => {
-    return {
-      position: "absolute",
-      top: 5,
-      left: left ? 40 : 135,
-      backgroundColor: "rgb(0, 191, 165)",
-      width: 60,
-      height: 110,
-      borderRadius: "50% / 50%",
-      rotate: left ? "-15deg" : "15deg",
-      animation:
-        isHover === null
-          ? undefined
-          : isHover
-          ? `${moveLegDownAnimation} 0.7s forwards`
-          : `${moveLegUpAnimation} 0.7s forwards`,
-    };
-  }
-);
-
 const GooeyTeeth = () => {
-  const [isHover, setIsHover] = useState<boolean | null>(null);
-  useEffect(() => {
-    console.log(isHover);
-  }, [isHover]);
   return (
     <div>
       <Container style={{ filter: `url(#goo)` }}>
         <div>
-          <Head isHover={isHover} left={true} />
-          <Head isHover={isHover} left={false} />
+          <Head left={true} />
+          <Head left={false} />
 
-          <Leg isHover={isHover} left={true} />
-          <Leg isHover={isHover} left={false} />
+          <Leg left={true} />
+          <Leg left={false} />
         </div>
 
-        <Button isHover={isHover} />
-        <Div
-          onMouseEnter={() => {
-            setIsHover(true);
-          }}
-          onMouseLeave={() => {
-            setIsHover(false);
-          }}
-        >
-          <span>Login</span>
-        </Div>
+        {/* <Div /> */}
+        {/* <Text>Loading</Text> */}
       </Container>
 
       <svg>
