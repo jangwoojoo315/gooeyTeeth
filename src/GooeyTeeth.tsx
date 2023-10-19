@@ -3,62 +3,44 @@ import styled from "@emotion/styled";
 import { useState } from "react";
 
 const closeAnimation = keyframes`
-  from {
+  0% {
 opacity:1;
 transform:scale(1)
 
   }
-  to {
+  50% {
 opacity:0;
 transform:scale(0)
   }
-`;
 
-const openAnimation = keyframes`
-  from {
-opacity:0;
-transform:scale(0)
-
-  }
-  to {
-opacity:1;
-transform:scale(1)
-  }
-`;
-
-const moveHeadUpAnimation = keyframes`
-  from{
-    top:5px
-  }
-  to{
-    top:-10px
-  }
+  100% {
+    opacity:1;
+    transform:scale(1)
+    
+      }
 `;
 
 const moveHeadDownAnimation = keyframes`
-  from{
+  0%{
     top:-10px
   }
-  to{
+  50%{
     top:5px
+  }
+  100%{
+    top:-10px
   }
 `;
 
 const moveLegDownAnimation = keyframes`
-  from{
+  0%{
     top:-4px
   }
-  to{
+  50%{
     top:60px
   }
-`;
-
-const moveLegUpAnimation = keyframes`
-  from{
-    top:60px
-  }
-  to{
-    top:5px
+  100%{
+    top:-4px
   }
 `;
 
@@ -103,9 +85,7 @@ const Div = styled("div")(() => {
     opacity: 1,
     borderRadius: "50%",
     backgroundColor: "rgb(0, 191, 165)",
-    animation: `${closeAnimation} 2s forwards`,
-    animationDirection: "alternate",
-    animationIterationCount: "infinite",
+    animation: `${closeAnimation} 1s forwards infinite`,
   };
 });
 
@@ -118,10 +98,7 @@ const Head = styled("div")<{ left: boolean }>(({ left }) => {
     height: 110,
     top: 0,
     borderRadius: 100,
-
-    animation: `${moveHeadDownAnimation} 2s forwards`,
-    animationDirection: "alternate",
-    animationIterationCount: "infinite",
+    animation: `${moveHeadDownAnimation} 1s forwards infinite`,
   };
 });
 
@@ -135,9 +112,7 @@ const Leg = styled("div")<{ left: boolean }>(({ left }) => {
     height: 115,
     borderRadius: "50% / 50%",
     rotate: left ? "-15deg" : "15deg",
-    animation: `${moveLegDownAnimation} 2s forwards`,
-    animationDirection: "alternate",
-    animationIterationCount: "infinite",
+    animation: `${moveLegDownAnimation} 1s forwards infinite`,
   };
 });
 
@@ -153,7 +128,7 @@ const GooeyTeeth = () => {
           <Leg left={false} />
         </div>
 
-        {/* <Div /> */}
+        <Div />
         {/* <Text>Loading</Text> */}
       </Container>
 
